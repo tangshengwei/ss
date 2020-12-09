@@ -2,13 +2,11 @@ package com.deallinker.ss.security.mobile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 
 /**
  * 发送短信验证码，第三方的短信服务接口
- * @author DL
- * @Auther: 梦学谷 www.mengxuegu.com
+ * （此类在 SecurityConfigBean 注入了，所以这里不需要加 @Component 注解了，）
  */
 //@Component
 public class SmsCodeSender implements SmsSend {
@@ -22,7 +20,7 @@ public class SmsCodeSender implements SmsSend {
      */
     @Override
     public boolean sendSms(String mobile, String content) {
-        String sendContent = String.format("梦学谷，验证码 %s, 请勿泄露给别人。", content);
+        String sendContent = String.format("腾讯云，验证码 %s, 请勿泄露给别人。", content);
         // 调用每三方发送功能的sdk
         logger.info("向手机号：" + mobile + "发送的短信为：" + sendContent);
         return true;

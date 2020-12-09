@@ -7,12 +7,14 @@ import com.deallinker.ss.security.session.CustomSessionInformationExpiredStrateg
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredStrategy;
 
 /**
  * 主要为容器中添加Bean实例
- * @Auther: 梦学谷 www.mengxuegu.com
+ *
  */
 @Configuration
 public class SecurityConfigBean {
@@ -21,12 +23,14 @@ public class SecurityConfigBean {
     @Bean
     @ConditionalOnMissingBean(SessionInformationExpiredStrategy.class)
     public SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
+        // 当同一用户的session达到指定数量时会执行该类
         return new CustomSessionInformationExpiredStrategy();
     }
 
     @Bean
     @ConditionalOnMissingBean(InvalidSessionStrategy.class)
     public InvalidSessionStrategy invalidSessionStrategy() {
+        // 当session失效后的处理逻辑
         return new CustomInvalidSessionStrategy();
     }
 
@@ -43,5 +47,9 @@ public class SecurityConfigBean {
         return new SmsCodeSender();
     }
 
-
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        // 明文+随机盐值》加密存储
+        return new BCryptPasswordEncoder();
+    }
 }

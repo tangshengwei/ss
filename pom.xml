@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.deallinker.ss</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>ss</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ss</name>
     <description>Demo project for Spring Boot</description>
@@ -108,6 +108,18 @@
         <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
+        <!--图片验证码-->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <!--解决找不到 javax.annotation.meta.When.MAYBE-->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+            <version>3.0.1</version>
         </dependency>
 
     </dependencies>

@@ -1,10 +1,5 @@
 package com.deallinker.ss.security.mobile;
 
-/**
- * @Description: TODO
- * @Author: tangsw
- * @Date 2020/12/2 17:05
- **/
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
@@ -14,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
  * 短信登陆鉴权 Provider，要求实现 AuthenticationProvider 接口
- * @author jitwxs
- * @since 2019/1/9 13:59
  */
 public class MobileCodeAuthenticationProvider implements AuthenticationProvider {
     private UserDetailsService userDetailsService;

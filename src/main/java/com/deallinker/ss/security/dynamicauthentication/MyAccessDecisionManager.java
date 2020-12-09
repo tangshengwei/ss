@@ -1,10 +1,5 @@
 package com.deallinker.ss.security.dynamicauthentication;
 
-/**
- * @Description: TODO
- * @Author: tangsw
- * @Date 2020/12/3 18:06
- **/
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -18,7 +13,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Created by yangyibo on 17/1/19.
+ * 动态鉴权 Manager
  */
 @Service
 public class MyAccessDecisionManager implements AccessDecisionManager {

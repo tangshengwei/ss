@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * @Description: TODO
+ * @Description: 用户名、密码登录 用户信息查询
  * @Author: tangsw
  * @Date 2020/12/1 18:28
  **/

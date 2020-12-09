@@ -1,11 +1,5 @@
 package com.deallinker.ss.security.dynamicauthentication;
 
-/**
- * @Description: TODO
- * @Author: tangsw
- * @Date 2020/12/3 18:08
- **/
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.deallinker.ss.base.entity.SysPermission;
 import com.deallinker.ss.base.mapper.SysPermissionMapper;
@@ -21,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
- * Created by yangyibo on 17/1/19.
+ * 动态鉴权 MetadataSource
  */
 @Service
 public class MyInvocationSecurityMetadataSourceService  implements

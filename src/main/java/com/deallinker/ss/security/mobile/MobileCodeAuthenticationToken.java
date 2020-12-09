@@ -1,10 +1,5 @@
 package com.deallinker.ss.security.mobile;
 
-/**
- * @Description: TODO
- * @Author: tangsw
- * @Date 2020/12/2 16:51
- **/
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.SpringSecurityCoreVersion;
@@ -13,8 +8,6 @@ import java.util.Collection;
 
 /**
  * 短信登录 AuthenticationToken，模仿 UsernamePasswordAuthenticationToken 实现
- * @author jitwxs
- * @since 2019/1/9 13:47
  */
 public class MobileCodeAuthenticationToken extends AbstractAuthenticationToken {
 

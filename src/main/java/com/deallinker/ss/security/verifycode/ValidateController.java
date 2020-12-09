@@ -1,18 +1,20 @@
 package com.deallinker.ss.security.verifycode;
 
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.web.HttpSessionSessionStrategy;
 import org.springframework.social.connect.web.SessionStrategy;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.ServletWebRequest;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Random;
 
 /**
  * @Description: TODO
@@ -22,63 +24,48 @@ import java.util.Random;
 @RestController
 public class ValidateController {
 
-    public final static String SESSION_KEY_IMAGE_CODE = "SESSION_KEY_IMAGE_CODE";
+    Logger logger = LoggerFactory.getLogger(getClass());
+    public static final String SESSION_KEY = "SESSION_KEY_IMAGE_CODE";
 
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
-    @GetMapping("/code/image")
-    public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ImageCode imageCode = createImageCode();
-        sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY_IMAGE_CODE, imageCode);
-        ImageIO.write(imageCode.getImage(), "jpeg", response.getOutputStream());
+    @Autowired
+    private ImageCodeConfig imageCodeConfig;
+
+    @Autowired
+    private DefaultKaptcha defaultKaptcha;
+
+    /**
+     * @Description 这个方法生成的验证码是 4 位数字，验证码信息存在 ImageCode 对象中，
+     *              如果把 session 放到 redis 中，会报序列化的错误，因为 redis 里不能存放 java 对象
+     * @Author tangsw
+     * @Date 2020/12/9 10:11
+     * @Param
+     * @Return
+     **/
+//    @GetMapping("/code/image")
+//    public void createCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        ImageCode imageCode = imageCodeConfig.createImageCode();
+//        sessionStrategy.setAttribute(new ServletWebRequest(request), SESSION_KEY, imageCode);
+//        ImageIO.write(imageCode.getImage(), "jpeg", response.getOutputStream());
+//    }
+
+
+    /**
+     * 获取图形验证码
+     */
+    @RequestMapping("/code/image")
+    public void imageCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 1. 获取验证码字符串
+        String code = defaultKaptcha.createText();
+        logger.info("生成的图形验证码是：{}", code);
+        // 2. 字符串把它放到session中
+        request.getSession().setAttribute(SESSION_KEY , code);
+        // 3. 获取验证码图片
+        BufferedImage image = defaultKaptcha.createImage(code);
+        // 4. 将验证码图片把它写出去
+        ServletOutputStream out = response.getOutputStream();
+        ImageIO.write(image, "jpg", out);
     }
 
-    private ImageCode createImageCode() {
-        int width = 100; // 验证码图片宽度
-        int height = 36; // 验证码图片长度
-        int length = 4;  // 验证码位数
-        int expireIn = 60; // 验证码有效时间 60s
-
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-
-        Graphics graphics = image.getGraphics();
-
-        Random random = new Random();
-
-        graphics.setColor(getRandColor(200, 500));
-        graphics.fillRect(0, 0, width, height);
-        graphics.setFont(new Font("Times New Roman", Font.ITALIC, 20));
-        graphics.setColor(getRandColor(160, 200));
-        for (int i = 0; i < 155; i++) {
-            int x = random.nextInt(width);
-            int y = random.nextInt(height);
-            int xl = random.nextInt(12);
-            int yl = random.nextInt(12);
-            graphics.drawLine(x, y, x + xl, y + yl);
-        }
-        StringBuilder sRand = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            String rand = String.valueOf(random.nextInt(10));
-            sRand.append(rand);
-            graphics.setColor(new Color(20 + random.nextInt(110), 20 + random.nextInt(110), 20 + random.nextInt(110)));
-            graphics.drawString(rand, 13 * i + 6, 16);
-        }
-
-        graphics.dispose();
-
-        return new ImageCode(image, sRand.toString(), expireIn);
-    }
-
-    private Color getRandColor(int fc, int bc) {
-        Random random = new Random();
-        if (fc > 255)
-            fc = 255;
-
-        if (bc > 255)
-            bc = 255;
-        int r = fc + random.nextInt(bc - fc);
-        int g = fc + random.nextInt(bc - fc);
-        int b = fc + random.nextInt(bc - fc);
-        return new Color(r, g, b);
-    }
 }

@@ -1,10 +1,4 @@
 package com.deallinker.ss.security.mobile;
-
-/**
- * @Description: TODO
- * @Author: tangsw
- * @Date 2020/12/2 16:52
- **/
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 短信登录的鉴权过滤器，模仿 UsernamePasswordAuthenticationFilter 实现
- * @author jitwxs
- * @since 2019/1/9 13:52
  */
 public class MobileCodeAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     /**

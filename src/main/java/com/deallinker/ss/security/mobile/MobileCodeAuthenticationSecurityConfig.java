@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 用于组合其他关于手机登录的组件
- * @Auther: 梦学谷 www.mengxuegu.com
+ *
  */
 @Component
 public class MobileCodeAuthenticationSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {

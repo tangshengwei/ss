@@ -1,6 +1,6 @@
 package com.deallinker.ss.security.session;
 
-import com.deallinker.ss.utils.MengxueguResult;
+import com.deallinker.ss.utils.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 /**
  * 当session失效后的处理逻辑
- * @Auther: 梦学谷 www.mengxuegu.com
+ * （失效时间在 application.xml 中配置、可以指定存储位置）
  */
 
 public class CustomInvalidSessionStrategy implements InvalidSessionStrategy {
@@ -26,7 +26,9 @@ public class CustomInvalidSessionStrategy implements InvalidSessionStrategy {
 
     @Override
     public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // session 中的 sessionID 如果不存在会生成一个
         logger.info("getSession().getId(): " + request.getSession().getId());
+        // 浏览器请求的 sessionId，
         logger.info("getRequestedSessionId(): " + request.getRequestedSessionId());
         // 缓存中移除session信息, 返回客户端的 sessionId 值
         sessionRegistry.removeSessionInformation(request.getRequestedSessionId());
@@ -34,7 +36,7 @@ public class CustomInvalidSessionStrategy implements InvalidSessionStrategy {
         // 要将浏览器中的cookie的jsessionid删除
         cancelCookie(request, response);
 
-        MengxueguResult result = MengxueguResult.build(
+        Response result = Response.build(
                 HttpStatus.UNAUTHORIZED.value(), "登录已超时，请重新登录");
 
         response.setContentType("application/json;charset=utf-8");

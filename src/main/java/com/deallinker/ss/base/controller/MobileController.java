@@ -1,7 +1,7 @@
 package com.deallinker.ss.base.controller;
 
 import com.deallinker.ss.security.mobile.SmsSend;
-import com.deallinker.ss.utils.MengxueguResult;
+import com.deallinker.ss.utils.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ public class MobileController {
 
     @RequestMapping("/code/mobile")
     @ResponseBody
-    public MengxueguResult sms(String mobile, HttpSession session) {
+    public Response sms(String mobile, HttpSession session) {
         int code = (int) Math.ceil(Math.random() * 9000 + 1000);
 
         Map<String, Object> map = new HashMap<>(16);
@@ -36,7 +36,7 @@ public class MobileController {
         session.setAttribute("smsCode", map);
 
         smsSend.sendSms(mobile, String.valueOf(code));
-        return MengxueguResult.ok("短信验证码发送成功");
+        return Response.ok("短信验证码发送成功");
     }
 
 }

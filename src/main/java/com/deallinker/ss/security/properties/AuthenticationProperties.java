@@ -3,37 +3,52 @@ package com.deallinker.ss.security.properties;
 import lombok.Data;
 
 /**
- * @Auther: 梦学谷 www.mengxuegu.com
+ * Spring security 配置
  */
 @Data
 public class AuthenticationProperties {
 
-    private String loginPage = "/login/page";
-    private String loginProcessingUrl = "/login/form";
-    private String usernameParameter = "name";
-    private String passwordParameter = "pwd";
-    private String[] staticPaths = {"/dist/**", "/modules/**", "/plugins/**", "/static/**"};
+    private String loginPage;
+    private String loginProcessingUrl;
+    private String usernameParameter;
+    private String passwordParameter;
+    private String[] staticPaths;
 
     /**
      * 认证响应的类型： JSON 、 REDIRECT 重定向
      */
-    private LoginResponseType loginType = LoginResponseType.REDIRECT;
+    private LoginResponseType loginType;
 
     /**
      *  获取图形验证码地址
      */
-    private String imageCodeUrl = "/code/image";
+    private String imageCodeUrl;
     /**
      * # 发送手机验证码地址
      */
-    private String mobileCodeUrl = "/code/mobile";
+    private String mobileCodeUrl;
     /**
      * # 前往手机登录页面
      */
-    private String mobilePage = "/mobile/page";
+    private String mobilePage;
     /**
      * # 记住我功能有效时长
      */
-    private Integer tokenValiditySeconds = 60*60*24*7;
+    private Integer tokenValiditySeconds;
+
+    /**
+     * 退出请求路径，默认 /logout
+     */
+    private String logoutUrl;
+
+    /**
+     * 退出成功后跳转地址
+     */
+    private String logoutSuccessUrl;
+
+    /**
+     * 退出后删除什么cookie值
+     */
+    private String deleteCookies;
 
 }

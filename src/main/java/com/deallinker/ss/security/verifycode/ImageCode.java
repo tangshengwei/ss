@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * @Description: TODO
+ * @Description: 存放用户名密码登录验证码对象
  * @Author: tangsw
  * @Date 2020/12/2 13:15
  **/

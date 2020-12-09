@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Auther: 梦学谷 www.mengxuegu.com
+ *
  */
 public abstract class AbstractUserDetailsService implements UserDetailsService {
 
@@ -35,21 +35,8 @@ public abstract class AbstractUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String usernameOrMobile) throws UsernameNotFoundException {
         // 1. 通过请求的用户名去数据库中查询用户信息
         SysUser sysUser = findSysUser(usernameOrMobile);
-        // 通过用户id去获取权限信息
+        // 2. 通过用户id去获取权限信息
         findSysPermission(sysUser);
-
-//        // 2. 查询该用户有哪一些权限
-//        List<SysPermission> permissions = sysPermissionService.findByUserId(sysUser.getId());
-//        // 3. 封装权限信息
-//        List<GrantedAuthority> authorities = new ArrayList<>();
-//        for(SysPermission sp: permissions) {
-//            // 权限标识
-//            String roleCode = sp.getCode();
-//            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(roleCode);
-//            authorities.add(grantedAuthority);
-//        }
-//        return new User(sysUser.getUsername(), sysUser.getPassword(), authorities);
-
 
         return sysUser;
     }

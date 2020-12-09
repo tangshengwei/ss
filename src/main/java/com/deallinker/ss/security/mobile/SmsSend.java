@@ -2,7 +2,7 @@ package com.deallinker.ss.security.mobile;
 
 /**
  * 短信发送统一接口
- * @Auther: 梦学谷 www.mengxuegu.com
+ *
  */
 public interface SmsSend {
 

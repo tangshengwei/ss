@@ -1,7 +1,7 @@
 package com.deallinker.ss.security.mobile;
 
-import com.deallinker.ss.security.handler.CustomAuthenticationFailureHandler;
 import com.deallinker.ss.security.exception.ValidateCodeException;
+import com.deallinker.ss.security.handler.CustomAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -17,9 +17,9 @@ import java.util.Map;
 
 /**
  * 校验用户输入的手机验证码是否正确
- * @Auther: 梦学谷 www.mengxuegu.com
+ *
  */
-@Component // 不要少了
+@Component
 public class MobileValidateFilter extends OncePerRequestFilter {
 
 
@@ -36,6 +36,7 @@ public class MobileValidateFilter extends OncePerRequestFilter {
                 // 校验验证码合法性
                 validate(request);
             }catch (AuthenticationException e) {
+                e.printStackTrace();
                 // 交给失败处理器进行处理异常
                 customAuthenticationFailureHandler.onAuthenticationFailure(request, response, e);
                 // 一定要记得结束

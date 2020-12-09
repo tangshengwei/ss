@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * @Description: TODO
+ * @Description: 短信验证码登录 用户信息查询
  * @Author: tangsw
  * @Date 2020/12/1 18:28
  **/

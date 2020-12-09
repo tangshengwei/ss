@@ -2,7 +2,7 @@ server:
   port: 8080
   servlet:
     session:
-      timeout: 10m
+      timeout: 10m # session 超时时间
       cookie:
         name: JSESSIONID # 指定浏览器Cookie中关于SessionID保存的那个名称
 spring:
@@ -17,14 +17,14 @@ spring:
   thymeleaf:
     cache: false
   session:
-    store-type: none
+    store-type: redis # 指定session存放位置
 
 mybatis-plus:
   # 指定实体类所有包
   type-aliases-package: com.deallinker.ss.base.entity
   mapper-locations: classpath:mapper/base/*.xml
 
-mengxuegu:
+base:
   security:
     authentication:
       loginPage: /login/page # 响应认证(登录)页面的URL
@@ -41,3 +41,6 @@ mengxuegu:
       mobileCodeUrl: /code/mobile # 发送手机验证码地址
       mobilePage: /mobile/page # 前往手机登录页面
       tokenValiditySeconds: 604800 # 记住我功能有效时长
+      logoutUrl: /user/logout # 退出请求路径，默认 /logout
+      logoutSuccessUrl: /login/page # 退出成功后跳转地址
+      deleteCookies: JSESSIONID # 退出后删除什么cookie值

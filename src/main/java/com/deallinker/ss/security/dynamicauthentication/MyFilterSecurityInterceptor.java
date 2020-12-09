@@ -1,10 +1,5 @@
 package com.deallinker.ss.security.dynamicauthentication;
 
-/**
- * @Description: TODO
- * @Author: tangsw
- * @Date 2020/12/3 18:08
- **/
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -22,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 /**
- * Created by yangyibo on 17/1/19.
+ * 动态鉴权 Interceptor
  */
 @Service
 public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {

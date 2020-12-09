@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @Auther: 梦学谷 www.mengxuegu.com
+ *
  */
 @Component
 public class CustomLogoutHandler implements LogoutHandler {

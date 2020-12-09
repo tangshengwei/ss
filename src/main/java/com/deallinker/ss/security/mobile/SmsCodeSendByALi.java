@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * 发送短信验证码，第三方的短信服务接口
- * @author DL
- * @Auther: 梦学谷 www.mengxuegu.com
  */
 @Component
 public class SmsCodeSendByALi implements SmsSend {

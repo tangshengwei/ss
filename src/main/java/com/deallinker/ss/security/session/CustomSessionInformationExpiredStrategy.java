@@ -12,8 +12,7 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 
 /**
- * 当同一用户的session达到指定数量 时,会执行该 类
- * @Auther: 梦学谷 www.mengxuegu.com
+ * 当同一用户的session达到指定数量时会执行该类
  */
 
 public class CustomSessionInformationExpiredStrategy implements SessionInformationExpiredStrategy {

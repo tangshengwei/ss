@@ -17,6 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @Description 认证失败处理器，
+ * @Author tangsw
+ * @Date 2020/12/9 10:43
+ **/
 @Component
 public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
     @Autowired
@@ -29,7 +34,7 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        logger.info("登陆失败");
+        logger.error("CustomAuthenticationFailureHandler 登陆失败", exception);
 
         if(LoginResponseType.JSON.equals(securityProperties.getAuthentication().getLoginType())) {
             // 认证失败响应JSON字符串，
