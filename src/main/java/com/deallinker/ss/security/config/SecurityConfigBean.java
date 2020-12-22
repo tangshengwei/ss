@@ -2,8 +2,6 @@ package com.deallinker.ss.security.config;
 
 import com.deallinker.ss.security.mobile.SmsCodeSender;
 import com.deallinker.ss.security.mobile.SmsSend;
-import com.deallinker.ss.security.session.CustomInvalidSessionStrategy;
-import com.deallinker.ss.security.session.CustomSessionInformationExpiredStrategy;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,20 +17,6 @@ import org.springframework.security.web.session.SessionInformationExpiredStrateg
 @Configuration
 public class SecurityConfigBean {
 
-
-    @Bean
-    @ConditionalOnMissingBean(SessionInformationExpiredStrategy.class)
-    public SessionInformationExpiredStrategy sessionInformationExpiredStrategy() {
-        // 当同一用户的session达到指定数量时会执行该类
-        return new CustomSessionInformationExpiredStrategy();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(InvalidSessionStrategy.class)
-    public InvalidSessionStrategy invalidSessionStrategy() {
-        // 当session失效后的处理逻辑
-        return new CustomInvalidSessionStrategy();
-    }
 
     /**
      * @ConditionalOnMissingBean(SmsSend.class)

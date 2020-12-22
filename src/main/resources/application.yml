@@ -1,10 +1,5 @@
 server:
   port: 8080
-  servlet:
-    session:
-      timeout: 10m # session 超时时间
-      cookie:
-        name: JSESSIONID # 指定浏览器Cookie中关于SessionID保存的那个名称
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -16,8 +11,6 @@ spring:
       validation-query: SELECT 1 FROM DUAL
   thymeleaf:
     cache: false
-  session:
-    store-type: redis # 指定session存放位置
 
 mybatis-plus:
   # 指定实体类所有包
@@ -35,7 +28,7 @@ base:
         - /dist/**
         - /modules/**
         - /plugins/**
-      loginType: REDIRECT # 认证之后 响应的类型：JSON/REDIRECT
+      loginType: JSON # 认证之后 响应的类型：JSON/REDIRECT
       #  "/code/image","/mobile/page", "/code/mobile"
       imageCodeUrl: /code/image # 获取图形验证码地址
       mobileCodeUrl: /code/mobile # 发送手机验证码地址
@@ -44,3 +37,4 @@ base:
       logoutUrl: /user/logout # 退出请求路径，默认 /logout
       logoutSuccessUrl: /login/page # 退出成功后跳转地址
       deleteCookies: JSESSIONID # 退出后删除什么cookie值
+      smsLogin: /sms/login

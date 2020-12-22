@@ -51,4 +51,9 @@ public class AuthenticationProperties {
      */
     private String deleteCookies;
 
+    /**
+     * 手机短信验证码登录地址
+     */
+    private String smsLogin;
+
 }

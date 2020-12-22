@@ -41,11 +41,11 @@ public class MobileCodeAuthenticationSecurityConfig extends SecurityConfigurerAd
         smsCodeAuthenticationFilter.setAuthenticationManager(http.getSharedObject(AuthenticationManager.class));
 
         // 指定记住我功能
-        smsCodeAuthenticationFilter.setRememberMeServices(http.getSharedObject(RememberMeServices.class));
+//        smsCodeAuthenticationFilter.setRememberMeServices(http.getSharedObject(RememberMeServices.class));
 
         // session重复登录 管理（用账号密码登录了，同一个账号手机号也不能登录了）
-        smsCodeAuthenticationFilter.setSessionAuthenticationStrategy(
-                http.getSharedObject(SessionAuthenticationStrategy.class));
+//        smsCodeAuthenticationFilter.setSessionAuthenticationStrategy(
+//                http.getSharedObject(SessionAuthenticationStrategy.class));
 
         // 传入 失败与成功处理器
         smsCodeAuthenticationFilter.setAuthenticationSuccessHandler(customAuthenticationSuccessHandler);

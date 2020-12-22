@@ -1,16 +1,13 @@
 package com.deallinker.ss.security.config;
 
-import com.deallinker.ss.security.dynamicauthentication.MyFilterSecurityInterceptor;
-import com.deallinker.ss.security.handler.CustomAuthenticationFailureHandler;
-import com.deallinker.ss.security.handler.CustomAuthenticationSuccessHandler;
+import com.deallinker.ss.security.handler.*;
 import com.deallinker.ss.security.mobile.MobileCodeAuthenticationSecurityConfig;
 import com.deallinker.ss.security.mobile.MobileValidateFilter;
 import com.deallinker.ss.security.properties.SecurityProperties;
-import com.deallinker.ss.security.session.CustomLogoutHandler;
+import com.deallinker.ss.security.token.JwtAuthenticationTokenFilter;
 import com.deallinker.ss.security.userdetail.CustomUserDetailsService;
 import com.deallinker.ss.security.verifycode.ValidateCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -18,15 +15,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.session.InvalidSessionStrategy;
-import org.springframework.security.web.session.SessionInformationExpiredStrategy;
-
-import javax.sql.DataSource;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -35,9 +26,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetailsService userDetailsService;
-
-    @Autowired
-    private ValidateCodeFilter validateCodeFilter;
 
     @Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -49,53 +37,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private MobileCodeAuthenticationSecurityConfig smsCodeAuthenticationSecurityConfig;
 
     @Autowired
-    private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
-
-    @Autowired
-    private MobileValidateFilter mobileValidateFilter;
-
-    @Autowired
     private SecurityProperties securityProperties;
-
     @Autowired
-    private InvalidSessionStrategy invalidSessionStrategy;
-
-    /**
-     * 当同个用户session数量超过指定值之后 ,会调用这个实现类
-     */
+    MyAccessDeniedHandler myAccessDeniedHandler;
     @Autowired
-    private SessionInformationExpiredStrategy sessionInformationExpiredStrategy;
-
-    /**
-     * 为了解决退出重新登录问题
-     * @return
-     */
-    @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
-
-    /**
-     * 退出清除缓存
-     */
+    MyAuthenticationEntryPoint myAuthenticationEntryPoint;
     @Autowired
-    private CustomLogoutHandler customLogoutHandler;
-
-    @Autowired
-    private DataSource dataSource;
-
-    /**
-     * 记住我功能
-     * @return
-     */
-    @Bean
-    public JdbcTokenRepositoryImpl jdbcTokenRepository() {
-        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
-        jdbcTokenRepository.setDataSource(dataSource);
-        // 是否启动项目时自动创建表，true自动创建
-//        jdbcTokenRepository.setCreateTableOnStartup(true);
-        return jdbcTokenRepository;
-    }
+    MyLogoutSuccessHandler myLogoutSuccessHandler;
 
 
     @Override
@@ -115,15 +63,22 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService); //.passwordEncoder(new BCryptPasswordEncoder());
     }
 
+    @Autowired
+    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    @Autowired
+    ValidateCodeFilter validateCodeFilter;
+    @Autowired
+    MobileValidateFilter mobileValidateFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.
-                // 手机验证码
-                 addFilterBefore(mobileValidateFilter, UsernamePasswordAuthenticationFilter.class)
-                // 图片验证码
+        http
+                // token 登录
+                .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
+//                // 手机验证码
+                .addFilterBefore(mobileValidateFilter, UsernamePasswordAuthenticationFilter.class)
+//                // 图片验证码
                 .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-                // 动态鉴权过滤器
-                .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
                 // 表单登录方式
                 .formLogin()
                 // 输入用户名密码登录页面
@@ -148,45 +103,37 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                         securityProperties.getAuthentication().getImageCodeUrl(),
                         securityProperties.getAuthentication().getMobileCodeUrl()
                 ).permitAll()
+                /** 解决跨域 **/
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 // 任何请求都要认证
                 .anyRequest().authenticated()
                 .and()
-                // 记住我功能
-                .rememberMe()
-                // 保存登录信息
-                .tokenRepository(jdbcTokenRepository())
-                // 记住我有效时长
-                .tokenValiditySeconds(securityProperties.getAuthentication().getTokenValiditySeconds())
-                .and()
-                // session管理
-                .sessionManagement()
-                // 当session失效后的处理类
-                .invalidSessionStrategy(invalidSessionStrategy)
-                // 每个用户在系统中最多可以有多少个session
-                .maximumSessions(1)
-                // 当用户达到最大session数后，则调用此处的实现
-                .expiredSessionStrategy(sessionInformationExpiredStrategy)
-//                .maxSessionsPreventsLogin(true) // 当一个用户达到最大session数,则不允许后面再登录
-                // 为了解决退出重新登录问题
-                .sessionRegistry(sessionRegistry())
-                .and()
-                .and()
                 .logout()
-                // 退出清除缓存
-                .addLogoutHandler(customLogoutHandler)
                 // 退出请求路径，默认 /logout
                 .logoutUrl(securityProperties.getAuthentication().getLogoutUrl())
                 // 退出成功后跳转地址
-                .logoutSuccessUrl(securityProperties.getAuthentication().getLogoutSuccessUrl())
-                // 退出后删除什么cookie值
-                .deleteCookies(securityProperties.getAuthentication().getDeleteCookies())
-        ;
+//                .logoutSuccessUrl(securityProperties.getAuthentication().getLogoutSuccessUrl())
+                // 退出成功 handler
+                .logoutSuccessHandler(myLogoutSuccessHandler);
 
-        // 关闭CSRF跨域
-        http.csrf().disable();
         // 将手机认证添加到过滤器链上
         http.apply(smsCodeAuthenticationSecurityConfig);
+
+        // 新加入(cors) CSRF  取消跨站请求伪造防护
+        http
+                .cors().and().csrf().disable()
+                // 使用 JWT，关闭token
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http
+                .exceptionHandling()
+                // 没有权限处理的类
+                .accessDeniedHandler(myAccessDeniedHandler)
+                // 用户未登录时返回给前端的数据
+                .authenticationEntryPoint(myAuthenticationEntryPoint)
+        ;
     }
+
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {

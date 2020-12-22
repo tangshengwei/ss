@@ -2,6 +2,7 @@ package com.deallinker.ss.security.mobile;
 
 import com.deallinker.ss.security.exception.ValidateCodeException;
 import com.deallinker.ss.security.handler.CustomAuthenticationFailureHandler;
+import com.deallinker.ss.security.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -26,11 +27,14 @@ public class MobileValidateFilter extends OncePerRequestFilter {
     @Autowired
     CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
+    @Autowired
+    SecurityProperties securityProperties;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 1. 判断 请求是否为手机登录，且post请求
-        if("/sms/login".equals(request.getRequestURI())
+        if(securityProperties.getAuthentication().getSmsLogin().equals(request.getRequestURI())
             && "post".equalsIgnoreCase(request.getMethod())) {
             try {
                 // 校验验证码合法性
@@ -54,7 +58,7 @@ public class MobileValidateFilter extends OncePerRequestFilter {
 
         // 判断是否正确
         if(smsCode == null) {
-            throw new ValidateCodeException("验证码不能为空");
+            throw new ValidateCodeException("验证码已经失效请重新获取");
         }
 
         // 系统生成验证码
