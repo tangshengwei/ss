@@ -123,7 +123,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 图片验证码
                 .addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
                 // 动态鉴权过滤器
-                .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
+//                .addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class)
                 // 表单登录方式
                 .formLogin()
                 // 输入用户名密码登录页面
